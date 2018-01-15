@@ -1,0 +1,17 @@
+.ICEauthority
+.Xauthority
+.bash_history
+.bash_logout
+.bashrc
+.cache/
+.compiz/
+.config/
+.dbus/
+.dmrc
+.local/
+.profile
+.sudo_as_admin_successful
+.viminfo
+.xsession-errors
+.xsession-errors.old
+examples.desktop
