@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import argparse
 import os.path
-from ml import baseline
+from tcss455group7 import baseline
 
-parser = argparse.ArgumentParser(description='445team7 project')
+parser = argparse.ArgumentParser(description='455team7 project')
 parser.add_argument('-i', help='input directory', type=str)
 parser.add_argument('-o', help='output directory', type=str)
 args = parser.parse_args()
