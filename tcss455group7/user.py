@@ -6,7 +6,6 @@ A data class for the user model.
 '''
 class user:
 
-    __attrs = {}
     __ATTR_NAMES = ['age', 'gender', 'ope', 'con', 'ext', 'agr', 'neu']
 
     '''
@@ -19,6 +18,7 @@ class user:
         attrs: a hash map of user attributes
     '''
     def __init__(self, **kwargs):
+        self.__attrs = {}
         assert kwargs['userid'] is not None
         self.__id = kwargs['userid']
         self.set(**kwargs)
@@ -26,7 +26,9 @@ class user:
     '''
     Get user id.
     '''
-    def id(self):
+    def id(self, **kwargs):
+        if 'id' in kwargs:
+            self.__id = kwargs['id']
         return self.__id
 
     '''
