@@ -5,7 +5,7 @@ import pickle
 class baseline:
 
     __PROFILE_FILE_NAME = 'profile/profile.csv'
-    __TRAINED_MODEL_PATH = '~/.baseline'
+    __TRAINED_MODEL_PATH = '/data/.baseline'
 
     def __init__(self):
         '''Constructor for this class.'''
@@ -49,7 +49,7 @@ class baseline:
         prediction.set(agr="%.3f" % round(model['agr'], 3))
         prediction.set(neu="%.3f" % round(model['neu'], 3))
 
-        with open(os.path.expanduser(self.__TRAINED_MODEL_PATH), 'w+') as model_file:
+        with os.fdopen(os.open(self.__TRAINED_MODEL_PATH, os.O_WRONLY | os.O_CREAT, 0o666), 'w') as model_file:
             pickle.dump(prediction, model_file)
 
     def parse_profile_csv(self, input_dir):
