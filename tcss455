@@ -19,19 +19,20 @@ if (args.i == args.o):
     print 'Input and output directories should not be the same'
     exit()
 
-if (not os.path.exists(args.i) or
-        (not args.train and
-            not os.path.exists(args.o)
-            )
-        ):
-    print 'Input or output directory does not exist.'
-    exit()
+if (not os.path.exists(args.i):
+    print "Input directory does not exist"
+    exit() 
 
 if (os.path.isfile(args.i) or
         (not args.train and os.path.isfile(args.o))
         ):
     print 'Input or output directory is not a directory.'
     exit()
+
+if (not args.train and not os.path.exists(args.o)):
+    print "Output directory does not exist. Will make a new directory"
+    os.makedirs(args.o)
+
 
 processor = baseline.baseline()
 if args.train:
