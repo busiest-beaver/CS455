@@ -19,9 +19,9 @@ if (args.i == args.o):
     print 'Input and output directories should not be the same'
     exit()
 
-if (not os.path.exists(args.i):
+if (not os.path.exists(args.i)):
     print "Input directory does not exist"
-    exit() 
+    exit()
 
 if (os.path.isfile(args.i) or
         (not args.train and os.path.isfile(args.o))
