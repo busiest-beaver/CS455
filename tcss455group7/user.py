@@ -43,7 +43,7 @@ class user:
     def set(self, **kwargs):
         for k, v in kwargs.items():
             if k in self.__ATTR_NAMES:
-                self.__attrs[k] = str(v)
+                self.__attrs[k] = v
 
 
     def to_xml(self):

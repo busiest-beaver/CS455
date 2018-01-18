@@ -15,7 +15,7 @@ class baseline:
         users = self.parse_profile_csv(input_dir)
         n_users = len(users)
         model = {
-                  'age': 0.0,
+                  'age': [0,0,0,0],
                   'gender': 0.0,
                   'ope': 0.0,
                   'con': 0.0,
@@ -27,20 +27,24 @@ class baseline:
         for user in users:
             attrs = user.attrs()
             for k, v in model.items():
-                model[k] = v + float(attrs[k])
+                if k == 'age':
+                    age = float(attrs['age'])
+                    if age < 25.0:
+                        model[k][0] += 1
+                    elif age < 35.0:
+                        model[k][1] += 1
+                    elif age < 50.0:
+                        model[k][2] += 1
+                    else:
+                        model[k][3] += 1
+                else:
+                    model[k] = v + float(attrs[k])
         for k, v in model.items():
-            model[k] = v / n_users
+            if not k == 'age':
+                model[k] = v / n_users
 
-        age_group = ''
-        if model['age'] < 25.0:
-            age_group = 'xx-24'
-        elif model['age'] < 35.0:
-            age_group = '25-34'
-        elif model['age'] < 50.0:
-            age_group = '35-49'
-        else:
-            age_group = '50-xx'
-
+        age_groups = ['xx-24', '25-34', '35-49', '50-xx']
+        age_group = age_groups[model['age'].index(max(model['age']))]
         prediction.set(age=age_group)
         prediction.set(gender="%.1f" % round(model['gender'], 0))
         prediction.set(ope="%.3f" % round(model['ope'], 3))
