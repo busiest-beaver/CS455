@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import argparse
 import os.path
 from tcss455group7 import baseline
@@ -16,31 +16,31 @@ if (args.i == None or
     exit()
 
 if (args.i == args.o):
-    print 'Input and output directories should not be the same'
+    print('Input and output directories should not be the same')
     exit()
 
 if (not os.path.exists(args.i)):
-    print "Input directory does not exist"
+    print('Input directory does not exist')
     exit()
 
 if (os.path.isfile(args.i) or
         (not args.train and os.path.isfile(args.o))
         ):
-    print 'Input or output directory is not a directory.'
+    print('Input or output directory is not a directory.')
     exit()
 
 if (not args.train and not os.path.exists(args.o)):
-    print "Output directory does not exist. Will make a new directory"
+    print('Output directory does not exist. Will make a new directory')
     os.makedirs(args.o)
 
 
 processor = baseline.baseline()
 if args.train:
-    print 'Training Mode'
-    print "Selected input directory: %s" % (args.i)
+    print('Training Mode')
+    print("Selected input directory: %s" % (args.i))
     processor.train(input_dir=args.i)
 else:
-    print 'Testing Mode'
-    print "Selected input directory: %s" % (args.i)
-    print "Selected output directory: %s" % (args.o)
+    print('Testing Mode')
+    print("Selected input directory: %s" % (args.i))
+    print("Selected output directory: %s" % (args.o))
     processor.test(input_dir=args.i, output_dir=args.o)

@@ -1,5 +1,5 @@
 import os
-import user as User
+from tcss455group7 import user as User
 import pickle
 
 class baseline:
@@ -53,7 +53,7 @@ class baseline:
         prediction.set(agr="%.3f" % round(model['agr'], 3))
         prediction.set(neu="%.3f" % round(model['neu'], 3))
 
-        with os.fdopen(os.open(self.__TRAINED_MODEL_PATH, os.O_WRONLY | os.O_CREAT, 0o666), 'w') as model_file:
+        with os.fdopen(os.open(self.__TRAINED_MODEL_PATH, os.O_WRONLY | os.O_CREAT, 0o666), 'wb') as model_file:
             pickle.dump(prediction, model_file)
 
     def parse_profile_csv(self, input_dir):
@@ -81,10 +81,10 @@ class baseline:
 
         file_name = os.path.expanduser(self.__TRAINED_MODEL_PATH)
         if not os.path.exists(file_name):
-            print 'The model must be trained before it can be used for testing.'
+            print('The model must be trained before it can be used for testing.')
             exit()
 
-        with open(file_name, 'r') as model_file:
+        with open(file_name, 'rb') as model_file:
             prediction = pickle.load(model_file)
 
         users = self.parse_profile_csv(input_dir)
@@ -92,6 +92,6 @@ class baseline:
             id = user.id()
             prediction.id(id=id)
             xml_str = prediction.to_xml()
-            with open(os.path.join(output_dir, "%s.xml" % id), 'w+') as xml_file_handle:
+            with open(os.path.join(output_dir, "%s.xml" % id), 'wb+') as xml_file_handle:
                     xml_file_handle.write(xml_str)
 
