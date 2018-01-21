@@ -8,5 +8,5 @@ setup(name='tcss455group7',
         author_email='deans93@uw.edu',
         license='MIT',
         packages=['tcss455group7'],
-        install_requires=['lxml'],
+        install_requires=['lxml', 'keras', 'pandas'],
         zip_safe=False)

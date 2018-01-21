@@ -4,15 +4,13 @@ import os
 
 PROFILE_CSV = '/data/training/profile/profile.csv'
 SRC_IMG_DIR = '/data/training/image'
-MALE_DIR = '/data/training/image/male'
-MALE_TRAIN_DIR = '/data/training/image/male/train'
-MALE_TEST_DIR = '/data/training/image/male/test'
-MALE_VALIDATE_DIR = '/data/training/image/male/validate'
+MALE_TRAIN_DIR = '/data/training/image/gender/train/male'
+MALE_TEST_DIR = '/data/training/image/gender/test/male'
+MALE_VALIDATE_DIR = '/data/training/image/gender/validate/male'
 
-FEMALE_DIR = '/data/training/image/female'
-FEMALE_TRAIN_DIR = '/data/training/image/female/train'
-FEMALE_TEST_DIR = '/data/training/image/female/test'
-FEMALE_VALIDATE_DIR = '/data/training/image/female/validate'
+FEMALE_TRAIN_DIR = '/data/training/image/gender/train/female'
+FEMALE_TEST_DIR = '/data/training/image/gender/test/female'
+FEMALE_VALIDATE_DIR = '/data/training/image/gender/validate/female'
 
 df = pd.read_csv(PROFILE_CSV).loc[:, ['userid', 'gender']]
 f_set = df[df.gender==1.0].sample(frac=1)
@@ -21,8 +19,6 @@ m_set = df[df.gender==0.0].sample(frac=1)
 f_test, f_validate, f_train = np.split(f_set, [int(.2*len(f_set)), int(.4*len(f_set))])
 m_test, m_validate, m_train = np.split(m_set, [int(.2*len(m_set)), int(.4*len(m_set))])
 
-if not os.path.exists(FEMALE_DIR):
-    os.makedirs(FEMALE_DIR)
 if not os.path.exists(FEMALE_TRAIN_DIR):
     os.makedirs(FEMALE_TRAIN_DIR)
 if not os.path.exists(FEMALE_VALIDATE_DIR):
@@ -30,8 +26,6 @@ if not os.path.exists(FEMALE_VALIDATE_DIR):
 if not os.path.exists(FEMALE_TEST_DIR):
     os.makedirs(FEMALE_TEST_DIR)
 
-if not os.path.exists(MALE_DIR):
-    os.makedirs(MALE_DIR)
 if not os.path.exists(MALE_TRAIN_DIR):
     os.makedirs(MALE_TRAIN_DIR)
 if not os.path.exists(MALE_VALIDATE_DIR):

@@ -1,13 +1,69 @@
 #!/usr/bin/env python3
 import argparse
+import os
 import os.path
+from copy import deepcopy
 from tcss455group7 import baseline
+from tcss455group7.image_gender_classifier import image_gender_classifier
+from tcss455group7 import user as User
+import pickle
 
 parser = argparse.ArgumentParser(description='455team7 project')
 parser.add_argument('-i', help='input directory', type=str)
 parser.add_argument('-o', help='output directory', type=str)
 parser.add_argument('--train', help='training mode', action='store_true')
 args = parser.parse_args()
+
+TRAINED_MODEL_PATH = '/data/.baseline'
+PROFILE_FILE_NAME = 'profile/profile.csv'
+
+def test(**kwargs):
+    input_dir = kwargs['input_dir']
+    output_dir = kwargs['output_dir']
+
+    print('Testing Mode')
+    print("Selected input directory: %s" % (input_dir))
+    print("Selected output directory: %s" % (output_dir))
+
+    baseline = get_baseline()
+    image_model_predictions = image_gender_classifier().test(input_dir=input_dir)
+
+    users = parse_profile_csv(input_dir)
+    for user in users:
+        prediction = deepcopy(baseline)
+        id = user.id()
+        prediction.id(id=id)
+
+        # inject image model prediction
+        if (id in image_model_predictions):
+            gender = image_model_predictions[id]['gender']
+            prediction.set(gender=gender)
+
+        xml_str = prediction.to_xml()
+        with open(os.path.join(output_dir, "%s.xml" % id), 'wb+') as xml_file_handle:
+            xml_file_handle.write(xml_str)
+
+def get_baseline():
+    with open(TRAINED_MODEL_PATH, 'rb') as model_file:
+        baseline = pickle.load(model_file)
+    return baseline
+
+def parse_profile_csv(input_dir):
+    file_name = os.path.join(input_dir, PROFILE_FILE_NAME)
+    users = []
+    with open(file_name) as file_handle:
+        lines = iter(file_handle)
+        header = next(lines).strip().split(',')[1:]
+        for line in lines:
+            row = line.strip().split(',')[1:]
+            attributes = {}
+            for i in range(0, len(header)):
+                k = header[i]
+                v = row[i]
+                attributes[k] = v
+            user = User.user(**attributes)
+            users.append(user)
+    return users
 
 if (args.i == None or
         (not args.train and args.o == None)
@@ -33,14 +89,4 @@ if (not args.train and not os.path.exists(args.o)):
     print('Output directory does not exist. Will make a new directory')
     os.makedirs(args.o)
 
-
-processor = baseline.baseline()
-if args.train:
-    print('Training Mode')
-    print("Selected input directory: %s" % (args.i))
-    processor.train(input_dir=args.i)
-else:
-    print('Testing Mode')
-    print("Selected input directory: %s" % (args.i))
-    print("Selected output directory: %s" % (args.o))
-    processor.test(input_dir=args.i, output_dir=args.o)
+test(input_dir=args.i, output_dir=args.o)
