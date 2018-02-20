@@ -46,8 +46,11 @@ def test(**kwargs):
         ###################
         # inject text model prediction
         if (id in text_model_predictions):
-            gender = text_model_predictions[id]['gender']
-            prediction.set(gender=gender)
+            gender = text_model_predictions.get(id)
+            genderValue = "female"
+            if (gender < 1.0):
+                genderValue = "male"
+            prediction.set(gender=genderValue)
 
         xml_str = prediction.to_xml()
         with open(os.path.join(output_dir, "%s.xml" % id), 'wb+') as xml_file_handle:
