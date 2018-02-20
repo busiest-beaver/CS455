@@ -1,3 +1,4 @@
+import codecs
 import os
 import pickle
 from os.path import basename, exists, join, splitext
@@ -12,13 +13,12 @@ class text_gender_classifier:
         '''empty constructor'''
 
     def __get_model(self):
-        file = open("~/src/CS455/text/hello.txt", 'rb')
-        file = open("~/src/CS455/text/text_model.pkl",'rb')
+        file = open("/home/itadmin/src/CS455/text/text_model.pkl",'rb')
         model = pickle.load(file)
         return model
 
     def __get_count_vectorizer(self):
-        file = open("~/src/CS455/text/text_count_vect.pkl",'rb')
+        file = open("/home/itadmin/src/CS455/text/text_count_vect.pkl",'rb')
         cv = pickle.load(file)
         return cv
 
@@ -50,7 +50,7 @@ class text_gender_classifier:
 
         # populating the ID and text lists
         for fileName in os.listdir(input_dir):  
-            fileContent = open(input_dir+fileName).read()
+            fileContent = codecs.open(input_dir+fileName, "r", encoding="utf-8", errors="ignore").read()
             id = os.path.splitext(fileName)[0]
             usersIDs.append(id)
             texts.append(fileContent)
