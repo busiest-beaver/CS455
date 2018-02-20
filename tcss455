@@ -5,6 +5,7 @@ import os.path
 from copy import deepcopy
 from tcss455group7 import baseline
 from tcss455group7.image_gender_classifier import image_gender_classifier
+from tcss455group7.text_gender_classifier import text_gender_classifier
 from tcss455group7 import user as User
 import pickle
 
@@ -26,7 +27,10 @@ def test(**kwargs):
     print("Selected output directory: %s" % (output_dir))
 
     baseline = get_baseline()
-    image_model_predictions = image_gender_classifier().test(input_dir=input_dir)
+    # image_model_predictions = image_gender_classifier().test(input_dir=input_dir)
+    text_model_predictions = text_gender_classifier().test(input_dir=input_dir)
+    
+
 
     users = parse_profile_csv(input_dir)
     for user in users:
@@ -35,8 +39,14 @@ def test(**kwargs):
         prediction.id(id=id)
 
         # inject image model prediction
-        if (id in image_model_predictions):
-            gender = image_model_predictions[id]['gender']
+        # if (id in image_model_predictions):
+        #     gender = image_model_predictions[id]['gender']
+        #     prediction.set(gender=gender)
+
+        ###################
+        # inject text model prediction
+        if (id in text_model_predictions):
+            gender = text_model_predictions[id]['gender']
             prediction.set(gender=gender)
 
         xml_str = prediction.to_xml()
