@@ -31,7 +31,7 @@ class text_gender_classifier:
         # loeading the count vectorizer created using test data to keep everything consistent
         cv = self.__get_count_vectorizer()
 
-        if (model == None): 
+        if (model == None):
             return {}
 
         # checking if directory to the text files exist
@@ -49,7 +49,7 @@ class text_gender_classifier:
         df = pd.DataFrame()
 
         # populating the ID and text lists
-        for fileName in os.listdir(input_dir):  
+        for fileName in os.listdir(input_dir):
             fileContent = codecs.open(input_dir+fileName, "r", encoding="utf-8", errors="ignore").read()
             id = os.path.splitext(fileName)[0]
             usersIDs.append(id)
@@ -70,5 +70,5 @@ class text_gender_classifier:
 
         # using the ID and gender columns in our dataframe to create a dictionary
         results = dict(zip(df['id'], df['gender']))
-        
+
         return results
