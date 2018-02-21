@@ -15,10 +15,10 @@ from sklearn.metrics import classification_report
 from sklearn.pipeline import make_pipeline
 import matplotlib.pyplot as plt
 from sklearn.linear_model import PassiveAggressiveRegressor
+import pickle
 
-
-df1 = pd.read_csv('./tcss455/training/profile/profile.csv', index_col=0)
-df2 = pd.read_csv('./tcss455/training/relation/relation.csv', index_col=0)
+df1 = pd.read_csv('/Users/wildergarcia/Desktop/tcss455/training/profile/profile.csv', index_col=0)
+df2 = pd.read_csv('/Users/wildergarcia/Desktop/tcss455/training/relation/relation.csv', index_col=0)
 
 df2['like_id'] = df2['like_id'].astype(str)
 df3 = pd.merge(df1,df2,how="outer",on='userid')
@@ -67,3 +67,8 @@ print("Accuracy: %.2f" % accuracy_score(y_test,y_predicted))
 # cnf_matrix = confusion_matrix(y_test,y_predicted,labels=classes)
 # print("Confusion matrix:")
 # print(cnf_matrix)
+with open("userlikes.pkl", "wb") as f:
+    pickle.dump(clf, f, pickle.HIGHEST_PROTOCOL)
+
+with open("likeVectors.pkl", "wb") as f:
+    pickle.dump(count_vect, f, pickle.HIGHEST_PROTOCOL)
