@@ -6,6 +6,7 @@ from copy import deepcopy
 from tcss455group7 import baseline
 from tcss455group7.image_gender_classifier import image_gender_classifier
 from tcss455group7.text_gender_classifier import text_gender_classifier
+from tcss455group7.likes_gender_classifier import likes_gender_classifier
 from tcss455group7 import user as User
 import pickle
 
@@ -28,8 +29,8 @@ def test(**kwargs):
 
     baseline = get_baseline()
     # image_model_predictions = image_gender_classifier().test(input_dir=input_dir)
-    text_model_predictions = text_gender_classifier().test(input_dir=input_dir)
-    
+    # text_model_predictions = text_gender_classifier().test(input_dir=input_dir)
+    like_model_predictions = likes_gender_classifier().test(input_dir=input_dir) 
 
 
     users = parse_profile_csv(input_dir)
@@ -44,9 +45,9 @@ def test(**kwargs):
         #     prediction.set(gender=gender)
 
         ###################
-        # inject text model prediction
-        if (id in text_model_predictions):
-            gender = text_model_predictions.get(id)
+        # inject likes model prediction
+        if (id in like_model_predictions):
+            gender = like_model_predictions.get(id)
             genderValue = "female"
             if (gender < 1.0):
                 genderValue = "male"

@@ -6,8 +6,7 @@ import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 
-
-class text_gender_classifier:
+class likes_gender_classifier:
 
     def __init__(self):
         '''empty constructor'''
@@ -43,14 +42,14 @@ class text_gender_classifier:
             print("Test directory to statuses not found.")
             exit()
 
-        # creating lists to store IDs and texts
-        usersIDs = []
-        likesIDs = []
         df = pd.read_csv(input_dir+"relation.csv")
+
+        df['like_id'] = df['like_id'].astype(str)
         list = []
         for i in df['like_id']:
-            str = ' '.join(i)
-            list.append(str)
+            string = ' '.join(i)
+            list.append(string)
+
         df['like_id'] = list #
         df = df.reset_index()
 
@@ -63,6 +62,6 @@ class text_gender_classifier:
         df['gender'] = prediction
 
         # using the ID and gender columns in our dataframe to create a dictionary
-        results = dict(zip(df['like_id'], df['gender']))
+        results = dict(zip(df['userid'], df['gender']))
 
         return results
