@@ -19,25 +19,30 @@ import pickle
 
 df1 = pd.read_csv('/Users/wildergarcia/Desktop/tcss455/training/profile/profile.csv', index_col=0)
 df2 = pd.read_csv('/Users/wildergarcia/Desktop/tcss455/training/relation/relation.csv', index_col=0)
-
+#convert like_id to string
 df2['like_id'] = df2['like_id'].astype(str)
+# merged profile and relation files into one dataframe based in user id
 df3 = pd.merge(df1,df2,how="outer",on='userid')
+# add the df3 to fourth dataframe and groupby userid into a list
 df4 = pd.DataFrame(df3.groupby('userid')['like_id'].apply(list))
 
-
+# print(df4.head())
 list = []
+# convert the dataframe using the likeid column to string and add to list
 for i in df4['like_id']:
     str = ' '.join(i)
     list.append(str)
+# add list to df4 dataframe
 df4['like_id'] = list #
+# reset the index
 df4 = df4.reset_index()
 
-#sort the dataframe base in useid in profile and relation
+# #sort the dataframe base in useid in profile and relation
 df1.sort_values(['userid'], ascending=True)
 df4.sort_values('userid', ascending=True)
 #combine base in userid
 df5 = pd.merge(df1, df4, on=['userid'])
-
+print(df5.columns)
 
 # Splitting the data into 300 training instances and 104 test instances
 n = 1500
@@ -57,7 +62,8 @@ clf = MultinomialNB() # this is the place where you can decrare decision tree
 clf.fit(X_train, data_train['gender'])
 
 # Testing the Naive Bayes model
-X_test = count_vect.transform(data_test['like_id'])
+newVec = CountVectorizer(vocabulary=count_vect.vocabulary_)
+X_test = newVec.transform(data_test['like_id'])
 y_test = data_test['gender']
 y_predicted = clf.predict(X_test)
 
@@ -71,4 +77,4 @@ with open("userlikes.pkl", "wb") as f:
     pickle.dump(clf, f, pickle.HIGHEST_PROTOCOL)
 
 with open("likeVectors.pkl", "wb") as f:
-    pickle.dump(count_vect, f, pickle.HIGHEST_PROTOCOL)
+    pickle.dump(newVec, f, pickle.HIGHEST_PROTOCOL)
