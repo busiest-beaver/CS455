@@ -12,14 +12,14 @@ class likes_gender_classifier:
         '''empty constructor'''
 
     def __get_model(self):
-         file = open("/data/userlikes.pkl",'rb')
-        # file = open("/home/itadmin/src/CS455/likes/userlikes.pkl",'rb')
+#          file = open("/data/userlikes.pkl",'rb')
+         file = open("/home/itadmin/src/CS455/likes/userlikes.pkl",'rb')
         model = pickle.load(file)
         return model
 
     def __get_count_vectorizer(self):
-        # file = open("/home/itadmin/src/CS455/likes/likeVectors.pkl",'rb')
-        file = open("/data/likeVectors.pkl",'rb')
+        file = open("/home/itadmin/src/CS455/likes/likeVectors.pkl",'rb')
+#         file = open("/data/likeVectors.pkl",'rb')
         cv = pickle.load(file)
         return cv
 
