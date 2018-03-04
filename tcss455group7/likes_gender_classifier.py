@@ -51,6 +51,13 @@ class likes_gender_classifier:
         like_ids = df['like_id']
 
 
-   
-        predictions = dict(zip(userids, clf.predict(vec.transform(like_ids))))
-        return predictions
+        vector = cv.transform(list(like_ids))
+
+         # using the count vector to predict gender
+        prediction = model.predict(vector)
+
+
+        # using the ID and gender columns in our dataframe to create a dictionary
+        results = dict(zip(userids, prediction))
+#         print(results)
+        return results
