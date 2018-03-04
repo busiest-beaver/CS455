@@ -23,55 +23,38 @@ import random
 df1 = pd.read_csv('/Users/wildergarcia/Desktop/tcss455/training/profile/profile.csv', index_col=0)
 df2 = pd.read_csv('/Users/wildergarcia/Desktop/tcss455/training/relation/relation.csv', index_col=0)
 
-# df1 = np.arange(len(df1))
-# random.shuffle(df1)
-#
-
-
-
-df2['like_id'] = df2['like_id'].astype(str)
-# merged profile and relation files into one dataframe based in user id
-df3 = pd.merge(df1,df2,how="outer",on='userid')
-# add the df3 to fourth dataframe and groupby userid into a list
-df4 = pd.DataFrame(df3.groupby('userid')['like_id'].apply(list))
-
-# print(df4.head())
-list = []
-# convert the dataframe using the likeid column to string and add to list
-for i in df4['like_id']:
-    str = ' '.join(i)
-    list.append(str)
-# add list to df4 dataframe
-df4['like_id'] = list #
-# reset the index
-df4 = df4.reset_index()
-
+df = pd.merge(df1, df2, how="outer",on='userid') \
+       .drop_duplicates().groupby('userid')['like_id'] \
+       .apply(lambda x: ' '.join(x.astype(str))) \
+       .reset_index()
+# print (df)
 # #sort the dataframe base in useid in profile and relation
 df1.sort_values(['userid'], ascending=True)
-df4.sort_values('userid', ascending=True)
+# df4.sort_values(['userid'], ascending=True)
+df.sort_values('userid', ascending=True)
+
 #combine base in userid
-df5 = pd.merge(df1, df4, on=['userid'])
-print(df5.columns)
+df5 = pd.merge(df1, df, on=['userid'])
+print(df5.head())
 
-# Splitting the data into 300 training instances and 104 test instances
-n = 1500
+
+n = 8000
 all_Ids = np.arange(len(df5))
-random.shuffle(all_Ids
-
-
-
-)
+random.shuffle(all_Ids)
 test_Ids = all_Ids[0:n]
 train_Ids = all_Ids[n:]
-data_test =df5.loc[test_Ids, :]
+data_test = df5.loc[test_Ids, :]
 data_train = df5.loc[train_Ids, :]
+# print(data_train)
 
 # Training a Naive Bayes model
-count_vect = CountVectorizer() # this mean a transformation in the training data
-X_train = count_vect.fit_transform(data_train['like_id']) # replace transcript with like_id
+count_vect = CountVectorizer()
+X_train = count_vect.fit_transform(data_train['like_id'])
+
 y_train = data_train['gender']
-clf = MultinomialNB() # this is the place where you can decrare decision tree
-clf.fit(X_train, data_train['gender'])
+clf = MultinomialNB() #declaring the type of machine learning
+#training
+clf.fit(X_train, y_train)
 
 # Testing the Naive Bayes model
 newVec = CountVectorizer(vocabulary=count_vect.vocabulary_)
@@ -80,11 +63,14 @@ y_test = data_test['gender']
 y_predicted = clf.predict(X_test)
 
 # Reporting on classification performance
-print("Accuracy: %.2f" % accuracy_score(y_test,y_predicted))
+print("Accuracy Likes with naive-Bayes: %.2f" % accuracy_score(y_test,y_predicted))
+scores = cross_val_score(clf, X_train, y_train, cv=10)
+print("10-Fold Accuracy: %0.2f" % (scores.mean()))
 
-
-with open("userlikes.pkl", "wb") as f:
+with open("userlikes2.pkl", "wb") as f:
     pickle.dump(clf, f, pickle.HIGHEST_PROTOCOL)
 
-with open("likeVectors.pkl", "wb") as f:
+with open("likeVectors2.pkl", "wb") as f:
     pickle.dump(newVec, f, pickle.HIGHEST_PROTOCOL)
+
+
