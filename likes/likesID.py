@@ -35,26 +35,24 @@ df.sort_values('userid', ascending=True)
 
 #combine base in userid
 df5 = pd.merge(df1, df, on=['userid'])
-print(df5.head())
+# print(df5.head())
 
 
-n = 8000
+# Splitting the data into 300 training instances and 104 test instances
+n = 1500
 all_Ids = np.arange(len(df5))
 random.shuffle(all_Ids)
 test_Ids = all_Ids[0:n]
 train_Ids = all_Ids[n:]
-data_test = df5.loc[test_Ids, :]
+data_test =df5.loc[test_Ids, :]
 data_train = df5.loc[train_Ids, :]
-# print(data_train)
 
 # Training a Naive Bayes model
-count_vect = CountVectorizer()
-X_train = count_vect.fit_transform(data_train['like_id'])
-
+count_vect = CountVectorizer() # this mean a transformation in the training data
+X_train = count_vect.fit_transform(data_train['like_id']) # replace transcript with like_id
 y_train = data_train['gender']
-clf = MultinomialNB() #declaring the type of machine learning
-#training
-clf.fit(X_train, y_train)
+clf = MultinomialNB() # this is the place where you can decrare decision tree
+clf.fit(X_train, data_train['gender'])
 
 # Testing the Naive Bayes model
 newVec = CountVectorizer(vocabulary=count_vect.vocabulary_)
@@ -63,14 +61,13 @@ y_test = data_test['gender']
 y_predicted = clf.predict(X_test)
 
 # Reporting on classification performance
-print("Accuracy Likes with naive-Bayes: %.2f" % accuracy_score(y_test,y_predicted))
+print("Accuracy: %.2f" % accuracy_score(y_test,y_predicted))
 scores = cross_val_score(clf, X_train, y_train, cv=10)
 print("10-Fold Accuracy: %0.2f" % (scores.mean()))
+
 
 with open("userlikes2.pkl", "wb") as f:
     pickle.dump(clf, f, pickle.HIGHEST_PROTOCOL)
 
 with open("likeVectors2.pkl", "wb") as f:
     pickle.dump(newVec, f, pickle.HIGHEST_PROTOCOL)
-
-
