@@ -12,14 +12,14 @@ class likes_gender_classifier:
         '''empty constructor'''
 
     def __get_model(self):
-#          file = open("/data/userlikes.pkl",'rb')
+        # file = open("/data/userlikes.pkl",'rb')
         file = open("/home/itadmin/src/CS455/likes/userlikes.pkl",'rb')
         model = pickle.load(file)
         return model
 
     def __get_count_vectorizer(self):
         file = open("/home/itadmin/src/CS455/likes/likeVectors.pkl",'rb')
-#         file = open("/data/likeVectors.pkl",'rb')
+        # file = open("/data/likeVectors.pkl",'rb')
         cv = pickle.load(file)
         return cv
 
@@ -45,20 +45,12 @@ class likes_gender_classifier:
             exit()
 
 
-        df = pd.read_csv(input_dir+"relation.csv").astype(str).drop_duplicates().groupby('userid')
+        df = pd.read_csv(input_dir+"relation.csv").astype(str).drop_duplicates().sort_values(by='userid', ascending=True).groupby('userid')
         userids = list(df.groups)
         df = df.agg({'like_id':lambda x:' '.join(x)})#['like_id']
         like_ids = df['like_id']
 
 
-        vector = cv.transform(list(like_ids))
-
-        # using the count vector to predict gender
-        prediction = model.predict(vector)
-
-
-        # using the ID and gender columns in our dataframe to create a dictionary
-        results = dict(zip(userids, prediction))
-        #print(results)
-        return results
-
+   
+        predictions = dict(zip(userids, clf.predict(vec.transform(like_ids))))
+        return predictions
