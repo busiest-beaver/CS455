@@ -57,10 +57,10 @@ def test(**kwargs):
                 genderValue = "male"
             prediction.set(gender=genderValue)
 
-
         # inject text based age prediction
         if (id in text_age_prediction):
             agePrediction = text_age_prediction.get(id)
+
             prediction.set(age=agePrediction)
 
         xml_str = prediction.to_xml()
