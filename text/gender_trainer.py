@@ -47,7 +47,7 @@ print("Accuracy Text with naive-Bayes: %.2f" % accuracy_score(y_test,y_predicted
 scores = cross_val_score(clf, X_train, y_train, cv=10)
 print("10-Fold Accuracy: %0.2f" % (scores.mean()))
 
-with open("text_model.pkl", "wb") as f:
+with open("text_gender_classifier.pkl", "wb") as f:
     pickle.dump(clf, f, pickle.HIGHEST_PROTOCOL)
 
 with open("text_count_vect.pkl", "wb") as f:

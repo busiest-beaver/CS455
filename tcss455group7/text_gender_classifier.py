@@ -13,7 +13,7 @@ class text_gender_classifier:
         '''empty constructor'''
 
     def __get_model(self):
-        file = open("/home/itadmin/src/CS455/text/text_model.pkl",'rb')
+        file = open("/home/itadmin/src/CS455/text/text_gender_classifier.pkl",'rb')
         model = pickle.load(file)
         return model
 
