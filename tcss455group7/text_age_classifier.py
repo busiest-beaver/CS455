@@ -15,7 +15,7 @@ class text_age_classifier:
 #         rfc_liwc_file = open("/home/itadmin/src/CS455/text/clf_rfc_liwc.pkl",'rb')
         
 #         svm_model = pickle.load(svm_file)
-#         rfc_model = pickle.load(rfc_file)
+        rfc_model = pickle.load(rfc_file)
 #         rfc_liwc_model = pickle.load(rfc_liwc_file)
         
         return rfc_model #, rfc_liwc_model, svm_model
