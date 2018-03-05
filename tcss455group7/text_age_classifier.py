@@ -56,7 +56,7 @@ class text_age_classifier:
             exit()
 
         # Read in LIWC
-        df = pd.read_csv(liwc_dir)
+        df = pd.read_csv(liwc_dir, error_bad_lines=False)
         #there is an inconsistency between 'userID' label in profile and LIWC, making sure the right column label is used
         if 'userid' in df.columns:
             df.rename(columns={'userid': 'userId'}, inplace=True)
