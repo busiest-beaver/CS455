@@ -6,7 +6,7 @@ from os.path import basename, exists, join, splitext
 import pandas as pd
 
 
-class liwc_age_classifier:
+class text_age_classifier:
 
     def __init__(self):
         '''empty constructor'''
