@@ -82,7 +82,7 @@ class text_age_classifier:
         
         #count vector for texts
         cv = self.__get_count_vectorizer()
-        X_test = cv.transform(df['text'].values.astype('U'))
+        X_test = cv.transform(df_text['text'].values.astype('U'))
 
 #         y_predicted_svm = svm_model.predict(X_test)
 
