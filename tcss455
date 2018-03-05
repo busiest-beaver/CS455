@@ -5,7 +5,8 @@ import os.path
 from copy import deepcopy
 from tcss455group7 import baseline
 from tcss455group7.image_gender_classifier import image_gender_classifier
-from tcss455group7.text_gender_classifier import text_gender_classifier, text_age_classifier
+from tcss455group7.text_gender_classifier import text_gender_classifier
+from tcss455group7.text_age_classifier import text_age_classifier
 from tcss455group7.likes_gender_classifier import likes_gender_classifier
 from tcss455group7 import user as User
 import pickle
