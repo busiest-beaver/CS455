@@ -5,7 +5,7 @@ import os.path
 from copy import deepcopy
 from tcss455group7 import baseline
 from tcss455group7.image_gender_classifier import image_gender_classifier
-from tcss455group7.text_gender_classifier import text_gender_classifier
+from tcss455group7.text_gender_classifier import text_gender_classifier, liwc_age_classifier
 from tcss455group7.likes_gender_classifier import likes_gender_classifier
 from tcss455group7 import user as User
 import pickle
@@ -28,10 +28,14 @@ def test(**kwargs):
     print("Selected output directory: %s" % (output_dir))
 
     baseline = get_baseline()
+
+    # # # # # # # # GENDER CLASSIFIERS# # # # # # # # 
     # image_model_predictions = image_gender_classifier().test(input_dir=input_dir)
     # text_model_predictions = text_gender_classifier().test(input_dir=input_dir)
     like_model_predictions = likes_gender_classifier().test(input_dir=input_dir) 
 
+    # # # # # # # # AGE CLASSIFIERS# # # # # # # # 
+    liwc_age_prediction = liwc_age_classifier().test(input_dir=input_dir)
 
     users = parse_profile_csv(input_dir)
     for user in users:
@@ -43,8 +47,8 @@ def test(**kwargs):
         # if (id in image_model_predictions):
         #     gender = image_model_predictions[id]['gender']
         #     prediction.set(gender=gender)
-
         ###################
+
         # inject likes model prediction
         if (id in like_model_predictions):
             gender = like_model_predictions.get(id)
@@ -52,6 +56,10 @@ def test(**kwargs):
             if (gender < 1.0):
                 genderValue = "male"
             prediction.set(gender=genderValue)
+
+        if (id in liwc_age_prediction):
+            agePrediction = liwc_age_prediction.get(id)
+            prediction.set(age=agePrediction)
 
         xml_str = prediction.to_xml()
         with open(os.path.join(output_dir, "%s.xml" % id), 'wb+') as xml_file_handle:
