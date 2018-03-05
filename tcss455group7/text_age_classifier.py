@@ -119,7 +119,7 @@ class text_age_classifier:
 #                 y_predicted_final[i] = y_predicted_rfc_liwc[i]
 
         # adding the gender column predicted by our model to the dataframe
-        df['age'] = y_predicted_rfc
+        df_text['age'] = y_predicted_rfc
 
         # using the ID and age columns in our dataframe to create a dictionary
         results = dict(zip(df['userId'], df['age']))
