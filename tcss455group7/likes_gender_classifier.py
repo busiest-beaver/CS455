@@ -54,8 +54,8 @@ class likes_gender_classifier:
 
         df = df.agg({'like_id':lambda x:' '.join(x.astype(str))}).reset_index() #['like_id']
         like_ids = df['like_id']
-        # userids = df['userid']
-        userids = list(df.groups)
+        userids = df['userid']
+        # userids = list(df.groups)
 
 
 
