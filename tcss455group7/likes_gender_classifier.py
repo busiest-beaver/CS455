@@ -44,20 +44,36 @@ class likes_gender_classifier:
             print("Test directory to statuses not found.")
             exit()
 
+        # df = df1.merge(df2,on='userid').drop_duplicates()
+        # df = df.sort_values(by='userid', ascending=True).groupby(['userid','gender'])
+        # df = df.agg({'like_id':lambda x: ' '.join(x.astype(str))}).reset_index()
 
-        df = pd.read_csv(input_dir+"relation.csv").astype(str).drop_duplicates().sort_values(by='userid', ascending=True).groupby('userid')
-        userids = list(df.groups)
-        df = df.agg({'like_id':lambda x:' '.join(x)})#['like_id']
+
+        df = pd.read_csv(input_dir+"relation.csv").astype(str).drop_duplicates()
+        df = df.sort_values(by='userid', ascending=True).groupby('userid')
+
+        df = df.agg({'like_id':lambda x:' '.join(x.astype(str))}).reset_index() #['like_id']
         like_ids = df['like_id']
+        # userids = df['userid']
+        userids = list(df.groups)
 
 
-        vector = cv.transform(list(like_ids))
 
-         # using the count vector to predict gender
+        # grouped = pd.read_csv(relation_path).astype(str).drop_duplicates().sort_values(by='userid', ascending=True).groupby('userid')
+        # user_ids = list(grouped.groups)
+        # like_ids = grouped.agg({'like_id':lambda x:' '.join(x)})['like_id']
+
+        # predictions = dict(zip(userids, clf.predict(vec.transform(like_ids))))
+        # return predictions
+
+
+        vector = cv.transform(like_ids)
+
+        # using the count vector to predict gender
         prediction = model.predict(vector)
 
 
         # using the ID and gender columns in our dataframe to create a dictionary
         results = dict(zip(userids, prediction))
-#         print(results)
+        print(results)
         return results
