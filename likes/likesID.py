@@ -26,11 +26,7 @@ df1 = pd.read_csv('/Users/wildergarcia/Desktop/tcss455/training/profile/profile.
 df2 = pd.read_csv('/Users/wildergarcia/Desktop/tcss455/training/relation/relation.csv', index_col=0)
 
 df = df1.merge(df2,on='userid').drop_duplicates().sort_values(by='userid', ascending=True).groupby(['userid','gender']).agg({'like_id':lambda x: ' '.join(x.astype(str))}).reset_index()
-<<<<<<< HEAD
-# df.to_csv('final.csv')
-=======
 
->>>>>>> b0698b50ca7434bbb4f297b76207dad1fc4806d8
 # Splitting the data into 300 training instances and 104 test instances
 n = 1500
 all_Ids = np.arange(len(df))
