@@ -18,7 +18,7 @@ import pickle
 #### Look into bigrams
 ####
 df = pd.read_csv("process.csv")
-n = 8000
+n = 1500
 all_Ids = np.arange(len(df))
 random.shuffle(all_Ids)
 test_Ids = all_Ids[0:n] 
