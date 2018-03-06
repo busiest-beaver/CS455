@@ -26,7 +26,7 @@ df1 = pd.read_csv('/Users/wildergarcia/Desktop/tcss455/training/profile/profile.
 df2 = pd.read_csv('/Users/wildergarcia/Desktop/tcss455/training/relation/relation.csv', index_col=0)
 
 df = df1.merge(df2,on='userid').drop_duplicates().sort_values(by='userid', ascending=True).groupby(['userid','gender']).agg({'like_id':lambda x: ' '.join(x.astype(str))}).reset_index()
-# print(df.head())
+# df.to_csv('final.csv')
 # Splitting the data into 300 training instances and 104 test instances
 n = 1500
 all_Ids = np.arange(len(df))
@@ -59,44 +59,3 @@ with open("userlikes.pkl", "wb") as f:
 
 with open("likeVectors.pkl", "wb") as f:
     pickle.dump(count_vect, f, pickle.HIGHEST_PROTOCOL)
-
-
-# # try to test public data
-# df3 = pd.read_csv('/Users/wildergarcia/Desktop/tcss455/public-test-data/profile/profile.csv', index_col=0)
-# df4 = pd.read_csv('/Users/wildergarcia/Desktop/tcss455/public-test-data/relation/relation.csv', index_col=0)
-# # print(df3.head())
-#
-# df5 = df3.merge(df4,on='userid').drop_duplicates().sort_values(by='userid', ascending=True).groupby('userid').agg({'like_id':lambda x: ' '.join(x.astype(str))}).reset_index()
-#
-# # print(df5.columns)
-#
-# df3.drop(['ope', 'con', 'ext','agr','neu'], axis=1, inplace=True)
-# # print(df3.head())
-# # print(df3.head())
-# # print(df3.columns)
-# # df3.sort_values(['userid'], ascending=True)
-# # print(df3.head())
-#
-# df6 = df3.merge(df5, on=['userid'])
-# print(df6.head())
-#
-# # Testing the Naive Bayes model
-# X_test_gender = count_vect.transform(df6['like_id'])
-# y_predicted_gender = clf.predict(df6['gender'])
-# # print(y_predicted_gender)
-# # Testing the Naive Bayes model
-# X_test_age = count_vect.transform(df6['like_id'])
-# y_predicted_age = clf.predict(df6['age'])
-# # print(y_predicted_age)
-# #
-# #
-# #
-# #
-
-
-
-# with open("userlikes2.pkl", "wb") as f:
-#     pickle.dump(clf, f, pickle.HIGHEST_PROTOCOL)
-#
-# with open("likeVectors2.pkl", "wb") as f:
-#     pickle.dump(newVec, f, pickle.HIGHEST_PROTOCOL)
