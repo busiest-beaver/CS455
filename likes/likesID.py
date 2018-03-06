@@ -20,7 +20,7 @@ from sklearn.pipeline import make_pipeline
 import matplotlib.pyplot as plt
 from sklearn.linear_model import PassiveAggressiveRegressor
 
-
+#test
 df1 = pd.read_csv('/Users/wildergarcia/Desktop/tcss455/training/profile/profile.csv', index_col=0)
 df2 = pd.read_csv('/Users/wildergarcia/Desktop/tcss455/training/relation/relation.csv', index_col=0)
 
