@@ -63,10 +63,10 @@ def test(**kwargs):
             prediction.set(gender=genderValue)
             
               # inject likes based age prediction
-         if (id in age_model_predictions):
-            agePrediction = age_model_predictions.get(id)
+#          if (id in age_model_predictions):
+#             agePrediction = age_model_predictions.get(id)
 
-            prediction.set(age=agePrediction)
+#             prediction.set(age=agePrediction)
     
 
         # inject text based age prediction
