@@ -40,7 +40,7 @@ def test(**kwargs):
 #     age_model_predictions = likes_age_classifier().test(input_dir=input_dir) 
 
     # # # # # # # # AGE CLASSIFIERS# # # # # # # # 
-    text_age_prediction = text_age_classifier().test(input_dir=input_dir)
+#     text_age_prediction = text_age_classifier().test(input_dir=input_dir)
 
     users = parse_profile_csv(input_dir)
     for user in users:
@@ -70,10 +70,10 @@ def test(**kwargs):
     
 
         # inject text based age prediction
-        if (id in text_age_prediction):
-            agePrediction = text_age_prediction.get(id)
+#         if (id in text_age_prediction):
+#             agePrediction = text_age_prediction.get(id)
 
-            prediction.set(age=agePrediction)
+#             prediction.set(age=agePrediction)
 
         xml_str = prediction.to_xml()
         with open(os.path.join(output_dir, "%s.xml" % id), 'wb+') as xml_file_handle:
