@@ -55,12 +55,12 @@ def test(**kwargs):
         ###################
 
         # inject likes model prediction
-        if (id in like_model_predictions):
-            gender = like_model_predictions.get(id)
-            genderValue = "female"
-            if (gender < 1.0):
-                genderValue = "male"
-            prediction.set(gender=genderValue)
+#         if (id in like_model_predictions):
+#             gender = like_model_predictions.get(id)
+#             genderValue = "female"
+#             if (gender < 1.0):
+#                 genderValue = "male"
+#             prediction.set(gender=genderValue)
             
 #               inject likes based age prediction
         if (id in age_model_predictions):
