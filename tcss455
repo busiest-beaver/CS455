@@ -8,6 +8,7 @@ from tcss455group7.image_gender_classifier import image_gender_classifier
 from tcss455group7.text_gender_classifier import text_gender_classifier
 from tcss455group7.text_age_classifier import text_age_classifier
 from tcss455group7.likes_gender_classifier import likes_gender_classifier
+from tcss455group7.likes_age_classifier import likes_age_classifier
 from tcss455group7 import user as User
 import pickle
 
@@ -34,6 +35,9 @@ def test(**kwargs):
     # image_model_predictions = image_gender_classifier().test(input_dir=input_dir)
     # text_model_predictions = text_gender_classifier().test(input_dir=input_dir)
     like_model_predictions = likes_gender_classifier().test(input_dir=input_dir) 
+    
+    # # # # # # # # AGE FOR LIKE CLASSIFIERS# # # # # # # # 
+    age_model_predictions = likes_age_classifier().test(input_dir=input_dir) 
 
     # # # # # # # # AGE CLASSIFIERS# # # # # # # # 
     text_age_prediction = text_age_classifier().test(input_dir=input_dir)
@@ -57,6 +61,13 @@ def test(**kwargs):
             if (gender < 1.0):
                 genderValue = "male"
             prediction.set(gender=genderValue)
+            
+              # inject likes based age prediction
+         if (id in age_model_predictions ):
+            agePrediction = age_model_predictions.get(id)
+
+            prediction.set(age=agePrediction)
+    
 
         # inject text based age prediction
         if (id in text_age_prediction):

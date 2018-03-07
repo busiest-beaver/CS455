@@ -52,7 +52,7 @@ class likes_gender_classifier:
         df = pd.read_csv(input_dir+"relation.csv").astype(str).drop_duplicates()
         df = df.sort_values(by='userid', ascending=True).groupby('userid')
 
-        df = df.agg({'like_id':lambda x:' '.join(x.astype(str))}).reset_index() #['like_id']
+        df = df.agg({'like_id':lambda x:' '.join(x.astype(str))}).reset_index()
         like_ids = df['like_id']
 
         userids = df['userid']
@@ -75,5 +75,5 @@ class likes_gender_classifier:
 
         # using the ID and gender columns in our dataframe to create a dictionary
         results = dict(zip(userids, prediction))
-        print(results)
+        # print(results)
         return results
