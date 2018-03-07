@@ -34,10 +34,10 @@ def test(**kwargs):
     # # # # # # # # GENDER CLASSIFIERS# # # # # # # # 
     # image_model_predictions = image_gender_classifier().test(input_dir=input_dir)
     # text_model_predictions = text_gender_classifier().test(input_dir=input_dir)
-    like_model_predictions = likes_gender_classifier().test(input_dir=input_dir) 
+    #like_model_predictions = likes_gender_classifier().test(input_dir=input_dir) 
     
     # # # # # # # # AGE FOR LIKE CLASSIFIERS# # # # # # # # 
-#     age_model_predictions = likes_age_classifier().test(input_dir=input_dir) 
+    age_model_predictions = likes_age_classifier().test(input_dir=input_dir) 
 
     # # # # # # # # AGE CLASSIFIERS# # # # # # # # 
 #     text_age_prediction = text_age_classifier().test(input_dir=input_dir)
@@ -62,11 +62,11 @@ def test(**kwargs):
                 genderValue = "male"
             prediction.set(gender=genderValue)
             
-              # inject likes based age prediction
-#          if (id in age_model_predictions):
-#             agePrediction = age_model_predictions.get(id)
+#               inject likes based age prediction
+        if (id in age_model_predictions):
+            agePrediction = age_model_predictions.get(id)
 
-#             prediction.set(age=agePrediction)
+            prediction.set(age=agePrediction)
     
 
         # inject text based age prediction
