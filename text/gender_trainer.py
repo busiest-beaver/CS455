@@ -1,72 +1,72 @@
-import random
-import numpy as np
-import pandas as pd #data processing
-from sklearn.feature_extraction.text import CountVectorizer #machine learning
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import classification_report
-from sklearn import tree
-from sklearn import metrics
-from sklearn.model_selection import cross_val_score
-from sklearn.ensemble import RandomForestClassifier
 import pickle
+import random
 
+import numpy as np
+import pandas as pd
+from sklearn import metrics
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.model_selection import cross_val_score
+from sklearn.naive_bayes import BernoulliNB, MultinomialNB
 
-####
-####
-#### Look into bigrams
-####
-df = pd.read_csv("process.csv")
-n = 1500
+#train model and export pickle binaries to be used in VM
+def train():
+    random.shuffle(all_Ids)
+    train_Ids = all_Ids[:] 
+    data_train = df.loc[train_Ids, :]
+
+    count_vect = CountVectorizer()
+    X_train = count_vect.fit_transform(data_train['text'].values.astype('U'))
+    newVec = CountVectorizer(vocabulary=count_vect.vocabulary_)
+    y_train = data_train['gender']
+    clf = MultinomialNB()
+    clf.fit(X_train, y_train)
+
+    with open("text_gender_classifier.pkl", "wb") as f:
+        pickle.dump(clf, f, pickle.HIGHEST_PROTOCOL)
+
+    with open("text_count_vect.pkl", "wb") as f:
+        pickle.dump(newVec, f, pickle.HIGHEST_PROTOCOL)
+
+#get x-validation scores for a given ML technique
+def getScores(clf):
+
+    random.shuffle(all_Ids)
+    train_Ids = all_Ids[:] 
+    data_train = df.loc[train_Ids, :]
+
+    count_vect = CountVectorizer()
+    X_train = count_vect.fit_transform(data_train['text'].values.astype('U'))
+    y_train = data_train['gender']
+    clf.fit(X_train, y_train)
+    scores = cross_val_score(clf, X_train, y_train, cv=10)
+    return scores.mean()
+
+def makeScoreCSV():
+    algorithms = ["MultinomialNB", "BernoulliNB", "RandomForest"]
+
+    algorithmUsed = []
+    scores = []
+    for i in range(len(algorithms)):
+        for j in range(50):
+            algorithmUsed.append(algorithms[i])
+            score = 0
+            if i == 0:
+                score = getScores(MultinomialNB())
+            elif i == 1:
+                score = getScores(BernoulliNB())
+            else:
+                score = getScores(RandomForestClassifier())
+            print(j+1, algorithms[i], score)
+            scores.append(score)
+
+    dataFrame = pd.DataFrame()
+    dataFrame["algorithms"] = algorithmUsed
+    dataFrame["scores"] = scores
+    dataFrame.to_csv("scoresGender.csv")
+
+df = pd.read_csv("processed.csv")
 all_Ids = np.arange(len(df))
-random.shuffle(all_Ids)
-test_Ids = all_Ids[0:n] 
-train_Ids = all_Ids[n:] 
-data_test = df.loc[test_Ids, :]
-data_train = df.loc[train_Ids, :]
-# print(data_train)
 
-# Training a Naive Bayes model
-count_vect = CountVectorizer()
-X_train = count_vect.fit_transform(data_train['text'].values.astype('U'))
-# print(X_train) #(user, word) frequency of word
-y_train = data_train['gender']
-clf = MultinomialNB() #declaring the type of machine learning
-#training
-clf.fit(X_train, y_train)
-
-# Testing the Naive Bayes model
-newVec = CountVectorizer(vocabulary=count_vect.vocabulary_)
-X_test = newVec.transform(data_test['text'].values.astype('U'))
-y_test = data_test['gender']
-y_predicted = clf.predict(X_test)
-
-# Reporting on classification performance
-print("Accuracy Text with naive-Bayes: %.2f" % accuracy_score(y_test,y_predicted))
-scores = cross_val_score(clf, X_train, y_train, cv=10)
-print("10-Fold Accuracy: %0.2f" % (scores.mean()))
-
-with open("text_gender_classifier.pkl", "wb") as f:
-    pickle.dump(clf, f, pickle.HIGHEST_PROTOCOL)
-
-with open("text_count_vect.pkl", "wb") as f:
-    pickle.dump(newVec, f, pickle.HIGHEST_PROTOCOL)
-###########################################################
-##########################################################
-
-# liwc = list(df.columns[11:])
-# liwcX = data_train[liwc]
-
-# # clf = tree.DecisionTreeClassifier(max_depth=5, criterion='entropy')
-# clf = RandomForestClassifier(criterion = 'entropy') #max_depth=5, criterion='entropy')
-
-# clf.fit(liwcX, y_train)
-
-# liwcXtest = data_test[liwc]
-# liwcPredicted = clf.predict(liwcXtest)
-# scores = cross_val_score(clf, X_train, y_train, cv=10)
-# print("10-Fold Accuracy: %0.2f" % (scores.mean()))
-# print("Accuracy Text with LIWC-Tree: %.2f" % accuracy_score(y_test,liwcPredicted))
-
-
+# makeScoreCSV()
+# train()
