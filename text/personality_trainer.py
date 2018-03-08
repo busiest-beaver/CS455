@@ -5,21 +5,16 @@ from math import sqrt
 
 import numpy as np
 import pandas as pd
-from keras.layers import Dense, Dropout
-from keras.models import Sequential
-from keras.optimizers import SGD
 from sklearn import metrics
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import (AdaBoostRegressor, BaggingRegressor,
+                              ExtraTreesRegressor, GradientBoostingRegressor,
+                              RandomForestRegressor)
 from sklearn.feature_extraction.text import CountVectorizer  # machine learning
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import accuracy_score
-from sklearn.naive_bayes import GaussianNB
-from sklearn.svm import SVR
+# from sklearn.svm import SVR
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-seed = 7
-np.random.seed(seed)
-LIWC_features = ['Seg', 'WC', 'WPS', 'Sixltr', 'Dic', 'Numerals',
+LIWC_features = ['WC', 'WPS', 'Sixltr', 'Dic', 'Numerals',
        'funct', 'pronoun', 'ppron', 'i', 'we', 'you', 'shehe', 'they', 'ipron',
        'article', 'verb', 'auxverb', 'past', 'present', 'future', 'adverb',
        'preps', 'conj', 'negate', 'quant', 'number', 'swear', 'social',
@@ -32,65 +27,101 @@ LIWC_features = ['Seg', 'WC', 'WPS', 'Sixltr', 'Dic', 'Numerals',
        'SemiC', 'QMark', 'Exclam', 'Dash', 'Quote', 'Apostro', 'Parenth',
        'OtherP', 'AllPct']
 
-df = pd.read_csv("processedAge.csv")
+df = pd.read_csv("processed.csv")
 n = 1500
-all_Ids = np.arange(len(df))
-random.shuffle(all_Ids)
-test_Ids = all_Ids[0:n] 
-train_Ids = all_Ids[n:] 
-data_test = df.loc[test_Ids, :]
-data_train = df.loc[train_Ids, :]
-# print(data_train)
+def train(trait):
+    all_Ids = np.arange(len(df))
+    random.shuffle(all_Ids)
+    test_Ids = all_Ids[0:n] 
+    train_Ids = all_Ids[n:] 
+    data_test = df.loc[test_Ids, :]
+    data_train = df.loc[train_Ids, :]
 
-X_train = data_train[LIWC_features]
-y_train = data_train['neu']
-X_test = data_test[LIWC_features]
-y_test = data_test['neu']
+    X_train = data_train[LIWC_features]
+    y_train = data_train[trait]
+    X_test = data_test[LIWC_features]
+    y_test = data_test[trait]
 
-# clf = LinearRegression() #declaring the type of machine learning
-# #training
-# clf.fit(pd.concat([X_train[:2000], X_train[:2000]]), pd.concat([y_train[:2000], y_train[:2000]]))
-# y_predicted = clf.predict(X_test)
+    linreg = LinearRegression() #declaring the type of machine learning
+    #training
+    linreg.fit(X_train, y_train)
+    y_linreg = linreg.predict(X_test)
 
-# # Reporting on classification performance
-# print('RMSE LinReg:', sqrt(metrics.mean_squared_error(y_test, y_predicted)))
-# ##########################################################################################################
+    # Reporting on classification performance
+    linreg_score = sqrt(metrics.mean_squared_error(y_test, y_linreg))
+    print('LINREG: ', linreg_score)
+    algorithms.append("LINREG")
+    performance.append(linreg_score)    
+    # ##########################################################################################################
 
-# rfr = RandomForestRegressor()
-# rfr.fit(pd.concat([X_train[2000:6500], X_train[2000:6500]]), pd.concat([y_train[2000:6500], y_train[2000:6500]]))
+    forest = RandomForestRegressor()
+    forest.fit(X_train, y_train)
 
-# y_pdsvr = rfr.predict(X_test)
+    y_forest = forest.predict(X_test)
+    forest_score = sqrt(metrics.mean_squared_error(y_test, y_forest))
+    print('FOREST: ', forest_score)
+    algorithms.append("FOREST")
+    performance.append(forest_score) 
+    # ##########################################################################################################
+    ada = AdaBoostRegressor()
+    ada.fit(X_train, y_train)
 
-# print('RMSE RFC:', sqrt(metrics.mean_squared_error(y_test, y_pdsvr)))
-# ##########################################################################################################
+    y_ada = ada.predict(X_test)
 
-# svr = SVR()
-# svr.fit(pd.concat([X_train[3500:7500], X_train[500:1890]]), pd.concat([y_train[3500:7500], y_train[500:1890]]))
+    ada_score = sqrt(metrics.mean_squared_error(y_test, y_ada))
+    print("ADA: ", ada_score)
+    algorithms.append("ADA")
+    performance.append(ada_score) 
+    # ##########################################################################################################
+    bag = BaggingRegressor()
+    bag.fit(X_train, y_train)
+    
+    y_bag = bag.predict(X_test)
 
-# y_pd = svr.predict(X_test)
+    bag_score = sqrt(metrics.mean_squared_error(y_test, y_bag))
+    print("BAG: ", bag_score)
+    algorithms.append("BAG")
+    performance.append(bag_score) 
+    # ##########################################################################################################
+    extra = ExtraTreesRegressor()
+    extra.fit(X_train, y_train)
+    
+    y_extra = extra.predict(X_test)
 
-# print('RMSE SVR:', sqrt(metrics.mean_squared_error(y_test, y_pd)))
-##########################################################################################################
-model = Sequential()
+    extra_score = sqrt(metrics.mean_squared_error(y_test, y_extra))
+    print("EXTRA: ", extra_score)    
+    algorithms.append("EXTRA")
+    performance.append(extra_score) 
+    # ##########################################################################################################
+    boost = GradientBoostingRegressor()
+    boost.fit(X_train, y_train)
+    
+    y_boost = boost.predict(X_test)
 
-model.add(Dense(35, input_dim=82, kernel_initializer='normal', activation='sigmoid'))
-model.add(Dropout(0.25))
-model.add(Dense(20, activation='sigmoid'))
-model.add(Dropout(0.5))
-model.add(Dense(35, kernel_initializer='normal', activation='sigmoid'))
-model.add(Dense(1, kernel_initializer='normal'))
+    boost_score = sqrt(metrics.mean_squared_error(y_test, y_boost))
+    print("BOOST: ", boost_score)
+    algorithms.append("BOOST")
+    performance.append(boost_score) 
+    # ##########################################################################################################
 
-sgd = SGD(lr=1e-3, decay=1e-6, momentum=0.7, nesterov=False)
+    print()
+    ny = [0]*1500
 
-model.compile(sgd, loss='mse', metrics=['mse'])
-# model.fit(pd.concat([X_train[6500:], X_train[6500:]]), pd.concat([y_train[6500:], y_train[6500:]]), epochs=30, verbose=False)
-model.fit(X_train, y_train, epochs=50, verbose=False)
+    for i in range(len(ny)):
+        ny[i] = (y_linreg[i] + y_forest[i] + y_ada[i] + y_bag[i] + y_extra[i] + y_boost[i])/6
 
-y_pred = model.predict(X_test)
-print('RMSE with neural network:', sqrt(metrics.mean_squared_error(y_test, y_pred)))
+    algorithms.append("MEAN")
+    performance.append(sqrt(metrics.mean_squared_error(y_test, ny)))
 
-# ny = [0]*1500
-# for i in range(len(ny)):
-#     ny[i] = (y_pred[i][0] + y_predicted[i] + y_pd[i] + y_pdsvr[i])/4
+traits = ["ope", "neu", "ext", "agr", "con"]
 
-# print('RMSE with neural network:', sqrt(metrics.mean_squared_error(y_test, ny)))
+for j in traits:
+    algorithms = []
+    performance = []
+    for i in range(50):
+        print(j.upper(), i+1)
+        train(j)
+    dfPerformance = pd.DataFrame()
+    dfPerformance["algorithms"] = algorithms
+    dfPerformance["scores"] = performance
+    dfPerformance.to_csv('scores'+j.upper()+'.csv')

@@ -1,11 +1,9 @@
 import os
-import pandas as pd #data processing
+import pandas as pd 
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
-import timeit
 
-start = timeit.default_timer()
-
+#process and clean text files
 def process(content):
     content = content.lower()
     tokenizer = RegexpTokenizer(r'\w+')
@@ -15,38 +13,45 @@ def process(content):
     return " ".join(filteredContent)
 
 #path to folder containing status txt files
-pathToStatus = 'training/text/'
-pathToProfile = 'training/profile/profile.csv'
-pathToLIWC = 'training/LIWC/LIWC.csv'
+pathToStatus = 'C:/Users/Abdullah/Desktop/455HW/training/text/'
+pathToProfile = 'C:/Users/Abdullah/Desktop/455HW/training/profile/profile.csv'
+pathToLIWC = 'C:/Users/Abdullah/Desktop/455HW/training/LIWC/LIWC.csv'
 
 df = pd.read_csv(pathToProfile)
-df = df.drop('Unnamed: 0', 1) #dropping unnamed, number column
-#adding column for text
-df['text'] = ""
+df = df.drop('Unnamed: 0', 1)
 
 liwc = pd.read_csv(pathToLIWC)
-
 liwcColumns = liwc.columns
 
-#inserting data from LIWC into the processing file
+#inserting data from LIWC into the processed file
 for i in range(0, len(liwc)):
     id = liwc.iloc[i]['userId']
     for entry in liwcColumns:
         df.loc[df.userid.isin([id]), str(entry)] = liwc.iloc[i][entry]
 
-#reading in status txt file
+#adding column for text
+df['text'] = ""
+#reading in status txt files, and adding them to 'text' column
 for fileName in os.listdir(pathToStatus):
     fileContent = open(pathToStatus+fileName).read()
     words = process(fileContent)
     id = os.path.splitext(fileName)[0]
     df.loc[df.userid.isin([id]), 'text'] = words
 
-df = df.drop('Unnamed: 0', 1) #dropping unnamed, number column
+#adding age labels. this way we can do prediction on continuous and discrete data
+ages = ["xx-24", "25-34", "35-49", "50-xx"]
+ageLabels = []
+for entry in df["age"]:
+    if (entry < 25):
+        ageLabels.append(ages[0])
+    elif (entry < 35):
+        ageLabels.append(ages[1])
+    elif (entry < 50):
+        ageLabels.append(ages[2])
+    else:
+        ageLabels.append(ages[3])
+df["ageLabel"] = ageLabels
+
 df = df.drop('userId', 1)
-df.to_csv('process.csv')
-stop = timeit.default_timer()
-
-print("Start:", start)
-print("Stop:", stop)
-
+df.to_csv('processed.csv')
 exit()
