@@ -18,7 +18,6 @@ class text_personality_classifier:
                 file = open("/home/itadmin/src/CS455/text/pickles/"+i+"s.pkl",'rb')
             else:
                 file = open("/home/itadmin/src/CS455/text/pickles/"+i+".pkl",'rb')            
-                
             models[i] = pickle.load(file)
 
         return models
@@ -59,6 +58,8 @@ class text_personality_classifier:
 
         # inserting all the prediction in a dictionary
         for i in traits:
+            print()
+            print(i)
             clf = models.get(i)
             df[i] = clf.predict(X)
 
