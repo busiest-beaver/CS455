@@ -24,7 +24,7 @@ class text_personality_classifier:
 
     def test(self, **kwargs):
         # column labels I want to use for LIWC
-        LIWC_features = ['Seg', 'WC', 'WPS', 'Sixltr', 'Dic', 'Numerals',
+        LIWC_features = ['WC', 'WPS', 'Sixltr', 'Dic', 'Numerals',
        'funct', 'pronoun', 'ppron', 'i', 'we', 'you', 'shehe', 'they', 'ipron',
        'article', 'verb', 'auxverb', 'past', 'present', 'future', 'adverb',
        'preps', 'conj', 'negate', 'quant', 'number', 'swear', 'social',
