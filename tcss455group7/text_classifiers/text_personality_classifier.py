@@ -43,7 +43,7 @@ class text_personality_classifier:
 
         liwc_dir = ""
         if (os.path.isdir(input_dir+"/LIWC/")):
-            liwc_dir = input_dir+"/LIWC/"
+            liwc_dir = input_dir+"LIWC/"
         elif (os.path.isdir(input_dir+"LIWC/")):
             liwc_dir = input_dir+"/LIWC/"
         else:
