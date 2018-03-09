@@ -14,10 +14,10 @@ class text_personality_classifier:
         traits = ["ope", "neu", "ext", "agr", "con"]
         
         for i in traits:
+            file = open("/home/itadmin/src/CS455/text/pickles/"+i+".pkl",'rb')            
             if i == "con":
-                i = "cons" #windows doesn't allow files names con
+                file = open("/home/itadmin/src/CS455/text/pickles/"+i+"s.pkl",'rb')
 
-            file = open("/home/itadmin/src/CS455/text/pickles/"+i+".pkl",'rb')
             models[i] = pickle.load(file)
 
         return models
