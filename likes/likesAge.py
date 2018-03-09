@@ -1,24 +1,13 @@
-import pandas as pd
-import numpy as np
-from sklearn import tree
-from sklearn import metrics
-from sklearn import svm
-from sklearn import datasets
-from sklearn import preprocessing
-from sklearn.model_selection import cross_val_predict
-from sklearn.model_selection import cross_val_score
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.naive_bayes import MultinomialNB, GaussianNB
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import classification_report
-from sklearn.pipeline import make_pipeline
-import matplotlib.pyplot as plt
-from sklearn.linear_model import PassiveAggressiveRegressor
 import pickle
 import random
 
-
+import numpy as np
+import pandas as pd
+from sklearn import metrics
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import cross_val_score
+from sklearn.naive_bayes import MultinomialNB
 
 df1 = pd.read_csv('/Users/wildergarcia/Desktop/tcss455/training/profile/profile.csv', index_col=0)
 df2 = pd.read_csv('/Users/wildergarcia/Desktop/tcss455/training/relation/relation.csv', index_col=0)
@@ -26,19 +15,18 @@ df2 = pd.read_csv('/Users/wildergarcia/Desktop/tcss455/training/relation/relatio
 df = df1.merge(df2,on='userid').drop_duplicates().sort_values(by='userid', ascending=True).groupby(['userid','age']).agg({'like_id':lambda x: ' '.join(x.astype(str))}).reset_index()
 # df.to_csv('final.csv')
 
-
 ageCat = 0
 for i in range(len(df)):
 
     a=df.iloc[i].age
     if a < 25:
-        ageCat = 1
+        ageCat = "xx-24"
     elif a < 35:
-        ageCat = 2
+        ageCat = "25-35"
     elif a < 50:
-        ageCat = 3
+        ageCat = "34-49"
     elif a >= 50 :
-        ageCat = 4
+        ageCat = "50-xx"
     else:
         print ("invalid age group")
 
@@ -46,7 +34,6 @@ for i in range(len(df)):
 
 
 # df.to_csv('final2.csv')
-# Splitting the data into 300 training instances and 104 test instances
 n = 1500
 all_Ids = np.arange(len(df))
 random.shuffle(all_Ids)
@@ -66,7 +53,6 @@ clf.fit(X_train, data_train['age'])
 X_test = count_vect.transform(data_test['like_id'])
 y_test = data_test['age']
 y_predicted = clf.predict(X_test)
-
 # Reporting on classification performance
 print("Accuracy: %.2f" % accuracy_score(y_test,y_predicted))
 scores = cross_val_score(clf, X_train, y_train, cv=10)
