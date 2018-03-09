@@ -15,16 +15,16 @@ class text_personality_classifier:
         
         for i in traits:
             if i == "con":
-                i = "cons" #windows doesn't allow files names con
-
-            file = open("/home/itadmin/src/CS455/text/pickles/"+i+".pkl",'rb')
+                file = open("/home/itadmin/src/CS455/text/pickles/"+i+"s.pkl",'rb')
+            else:
+                file = open("/home/itadmin/src/CS455/text/pickles/"+i+".pkl",'rb')            
             models[i] = pickle.load(file)
 
         return models
 
     def test(self, **kwargs):
         # column labels I want to use for LIWC
-        LIWC_features = ['Seg', 'WC', 'WPS', 'Sixltr', 'Dic', 'Numerals',
+        LIWC_features = ['WC', 'WPS', 'Sixltr', 'Dic', 'Numerals',
        'funct', 'pronoun', 'ppron', 'i', 'we', 'you', 'shehe', 'they', 'ipron',
        'article', 'verb', 'auxverb', 'past', 'present', 'future', 'adverb',
        'preps', 'conj', 'negate', 'quant', 'number', 'swear', 'social',
@@ -43,21 +43,23 @@ class text_personality_classifier:
 
         liwc_dir = ""
         if (os.path.isdir(input_dir+"/LIWC/")):
-            liwc_dir = input_dir+"LIWC/"
-        elif (os.path.isdir(input_dir+"LIWC/")):
             liwc_dir = input_dir+"/LIWC/"
+        elif (os.path.isdir(input_dir+"LIWC/")):
+            liwc_dir = input_dir+"LIWC/"
         else:
             print("Test directory to LIWC not found.")
             exit()
 
         # Read in LIWC
-        df = pd.read_csv(liwc_dir, error_bad_lines=False, engine="python")
+        df = pd.read_csv(liwc_dir+"LIWC.csv", error_bad_lines=False)
 
         # predicting using LIWC
         X = df[LIWC_features]
 
         # inserting all the prediction in a dictionary
         for i in traits:
+            print()
+            print(i)
             clf = models.get(i)
             df[i] = clf.predict(X)
 
