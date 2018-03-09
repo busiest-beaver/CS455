@@ -51,7 +51,7 @@ class text_personality_classifier:
             exit()
 
         # Read in LIWC
-        df = pd.read_csv(liwc_dir+"LIWC.csv", error_bad_lines=False, engine="python")
+        df = pd.read_csv(liwc_dir+"LIWC.csv", error_bad_lines=False)
 
         # predicting using LIWC
         X = df[LIWC_features]
