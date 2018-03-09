@@ -38,7 +38,7 @@ class text_gender_classifier:
         if (os.path.isdir(input_dir+"/text/")):
             input_dir = input_dir+"/text/"
         elif (os.path.isdir(input_dir+"text/")):
-            input_dir = input_dir+"/text"
+            input_dir = input_dir+"text/"
         else:
             print("Test directory to statuses not found.")
             exit()

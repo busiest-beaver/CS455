@@ -42,10 +42,10 @@ class text_personality_classifier:
         models = self.__get_model()
 
         liwc_dir = ""
-        if (os.path.isdir(input_dir+"/LIWC/")):
+        if (os.path.isdir(input_dir+"/LIWC")):
             liwc_dir = input_dir+"/LIWC/"
-        elif (os.path.isdir(input_dir+"LIWC/")):
-            liwc_dir = input_dir+"/LIWC/"
+        elif (os.path.isdir(input_dir+"LIWC")):
+            liwc_dir = input_dir+"LIWC/"
         else:
             print("Test directory to LIWC not found.")
             exit()
