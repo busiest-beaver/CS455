@@ -22,5 +22,5 @@ def plotGender():
     plt.xticks(rotation=65)
     plt.show()
 
-# plotPersonality()
-plotGender()
+plotPersonality()
+# plotGender()

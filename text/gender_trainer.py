@@ -8,9 +8,10 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import cross_val_score
 from sklearn.naive_bayes import BernoulliNB, MultinomialNB
+from sklearn.svm import SVC
 
 #train model and export pickle binaries to be used in VM
-def train():
+def makePickle():
     random.shuffle(all_Ids)
     train_Ids = all_Ids[:] 
     data_train = df.loc[train_Ids, :]
@@ -22,10 +23,10 @@ def train():
     clf = MultinomialNB()
     clf.fit(X_train, y_train)
 
-    with open("text_gender_classifier.pkl", "wb") as f:
+    with open("pickles/text_gender.pkl", "wb") as f:
         pickle.dump(clf, f, pickle.HIGHEST_PROTOCOL)
 
-    with open("text_count_vect.pkl", "wb") as f:
+    with open("pickles/text_vector.pkl", "wb") as f:
         pickle.dump(newVec, f, pickle.HIGHEST_PROTOCOL)
 
 #get x-validation scores for a given ML technique
@@ -43,12 +44,12 @@ def getScores(clf):
     return scores.mean()
 
 def makeScoreCSV():
-    algorithms = ["MultinomialNB", "BernoulliNB", "RandomForest"]
+    algorithms = ["MultinomialNB", "BernoulliNB"]#, "RandomForest"]
 
     algorithmUsed = []
     scores = []
     for i in range(len(algorithms)):
-        for j in range(50):
+        for j in range(5):
             algorithmUsed.append(algorithms[i])
             score = 0
             if i == 0:
@@ -67,6 +68,5 @@ def makeScoreCSV():
 
 df = pd.read_csv("processed.csv")
 all_Ids = np.arange(len(df))
-
 # makeScoreCSV()
-# train()
+makePickle()
