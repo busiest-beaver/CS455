@@ -64,7 +64,7 @@ def test(**kwargs):
             
 #       inject ensemble gender prediction
         predictGender(image_model_predictions, text_model_predictions, 
-                like_model_predictions, prediction, id):
+                like_model_predictions, prediction, id)
     
 #       inject likes based age prediction
         if (id in age_model_predictions):
