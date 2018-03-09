@@ -5,8 +5,8 @@ import os.path
 from copy import deepcopy
 from tcss455group7 import baseline
 from tcss455group7.image_gender_classifier import image_gender_classifier
-from tcss455group7.text_gender_classifier import text_gender_classifier
-from tcss455group7.text_age_classifier import text_age_classifier
+from tcss455group7.text_classifiers.text_gender_classifier import text_gender_classifier
+from tcss455group7.text_classifiers.text_personality_classifier import text_personality_classifier
 from tcss455group7.likes_gender_classifier import likes_gender_classifier
 from tcss455group7.likes_age_classifier import likes_age_classifier
 from tcss455group7 import user as User
@@ -32,15 +32,16 @@ def test(**kwargs):
     baseline = get_baseline()
 
     # # # # # # # # GENDER CLASSIFIERS# # # # # # # # 
-    # image_model_predictions = image_gender_classifier().test(input_dir=input_dir)
-    # text_model_predictions = text_gender_classifier().test(input_dir=input_dir)
-    #like_model_predictions = likes_gender_classifier().test(input_dir=input_dir) 
+    image_model_predictions = image_gender_classifier().test(input_dir=input_dir)
+    text_model_predictions = text_gender_classifier().test(input_dir=input_dir)
+    like_model_predictions = likes_gender_classifier().test(input_dir=input_dir) 
     
     # # # # # # # # AGE FOR LIKE CLASSIFIERS# # # # # # # # 
     age_model_predictions = likes_age_classifier().test(input_dir=input_dir) 
 
-    # # # # # # # # AGE CLASSIFIERS# # # # # # # # 
-#     text_age_prediction = text_age_classifier().test(input_dir=input_dir)
+    # # # # # # # # PERSONALITY CLASSIFIER# # # # # # # # 
+    personality_predictions = text_personality_classifier().test(input_dir=input_dir)
+    
 
     users = parse_profile_csv(input_dir)
     for user in users:
@@ -52,7 +53,6 @@ def test(**kwargs):
         # if (id in image_model_predictions):
         #     gender = image_model_predictions[id]['gender']
         #     prediction.set(gender=gender)
-        ###################
 
         # inject likes model prediction
 #         if (id in like_model_predictions):
@@ -62,18 +62,13 @@ def test(**kwargs):
 #                 genderValue = "male"
 #             prediction.set(gender=genderValue)
             
-#               inject likes based age prediction
+#       inject likes based age prediction
         if (id in age_model_predictions):
             agePrediction = age_model_predictions.get(id)
-
             prediction.set(age=agePrediction)
     
-
-        # inject text based age prediction
-#         if (id in text_age_prediction):
-#             agePrediction = text_age_prediction.get(id)
-
-#             prediction.set(age=agePrediction)
+#       classifying personality traits using text
+        predictPersonality(personality_predictions, prediction, id)
 
         xml_str = prediction.to_xml()
         with open(os.path.join(output_dir, "%s.xml" % id), 'wb+') as xml_file_handle:
@@ -83,6 +78,40 @@ def get_baseline():
     with open(TRAINED_MODEL_PATH, 'rb') as model_file:
         baseline = pickle.load(model_file)
     return baseline
+
+def predictGender(image_model_predictions, text_model_predictions, 
+                like_model_predictions, prediction, id):
+
+    gender_prediction = None
+    if (id in like_model_predictions):
+        genderLikes = like_model_predictions.get(id)
+        gender_prediction = "female"
+        if (genderLikes < 1.0):
+            gender_prediction = "male"
+
+    if (id in image_model_predictions):
+        genderImage = image_model_predictions[id]['gender']
+        if (genderImage == gender_prediction):
+            prediction.set(gender=gender_prediction)
+            return
+        else:
+            if (id in text_model_predictions):
+                genderText = text_model_predictions.get(id)
+                if (genderText < 1.0 and gender_prediction == "male"):
+                    prediction.set(gender=gender_prediction)
+                else:
+                    gender_prediction = "female"
+                    prediction.set(gender=gender_prediction)
+                    return
+                    
+def predictPersonality(personality_predictions, prediction, id):
+    if id in personality_predictions:
+        traits = personality_predictions.get(id)
+        prediction.set(con=traits.get("con"))
+        prediction.set(neu=traits.get("neu"))
+        prediction.set(ext=traits.get("ext"))
+        prediction.set(agr=traits.get("agr"))
+        prediction.set(ope=traits.get("ope"))
 
 def parse_profile_csv(input_dir):
     file_name = os.path.join(input_dir, PROFILE_FILE_NAME)

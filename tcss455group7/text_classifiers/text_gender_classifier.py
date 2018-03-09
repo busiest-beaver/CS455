@@ -13,12 +13,12 @@ class text_gender_classifier:
         '''empty constructor'''
 
     def __get_model(self):
-        file = open("/home/itadmin/src/CS455/text/text_gender_classifier.pkl",'rb')
+        file = open("/home/itadmin/src/CS455/text/pickles/text_gender.pkl",'rb')
         model = pickle.load(file)
         return model
 
     def __get_count_vectorizer(self):
-        file = open("/home/itadmin/src/CS455/text/text_count_vect.pkl",'rb')
+        file = open("/home/itadmin/src/CS455/text/pickles/text_vector.pkl",'rb')
         cv = pickle.load(file)
         return cv
 
