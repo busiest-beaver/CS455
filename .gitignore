@@ -2,3 +2,4 @@
 *.egg-info
 *.csv
 *.vscode
+*.DS_Store
