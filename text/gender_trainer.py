@@ -8,7 +8,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import cross_val_score
 from sklearn.naive_bayes import BernoulliNB, MultinomialNB
-from sklearn.svm import SVC
 
 #train model and export pickle binaries to be used in VM
 def makePickle():
