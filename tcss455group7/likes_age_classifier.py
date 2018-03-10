@@ -59,5 +59,5 @@ class likes_age_classifier:
 
         # using the ID and gender columns in our dataframe to create a dictionary
         results = dict(zip(userids, prediction))
-        print(results)
+        
         return results
